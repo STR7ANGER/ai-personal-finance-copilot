@@ -1,0 +1,21 @@
+{
+  "name": "@finance-copilot/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@finance-copilot/contracts": "*",
+    "@hono/node-server": "^1.19.0",
+    "hono": "^4.10.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.0"
+  }
+}

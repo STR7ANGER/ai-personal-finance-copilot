@@ -4,9 +4,9 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 
 ## Day 1 — Foundation and first vertical slice (Tasks 1–10)
 
-- [ ] 1. Design workspace, Docker services, environment validation, and CI; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 2. Implement workspace, Docker services, environment validation, and CI; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 3. Verify workspace, Docker services, environment validation, and CI with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 1. Design workspace, Docker services, environment validation, and CI; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 2. Implement workspace, Docker services, environment validation, and CI; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 3. Verify workspace, Docker services, environment validation, and CI with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 4. Design authentication, encrypted profiles, and audit logging; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 5. Implement authentication, encrypted profiles, and audit logging; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [ ] 6. Verify authentication, encrypted profiles, and audit logging with tests, failure cases, telemetry, documentation, and a reviewable demo.
@@ -44,4 +44,3 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 ## Task completion checklist
 
 A task is complete only when code is formatted and typed, tests pass, migrations are reproducible, UI states are handled, authorization is enforced, logs contain no secrets, and relevant docs are updated. Track blockers beneath the task instead of silently widening scope.
-
