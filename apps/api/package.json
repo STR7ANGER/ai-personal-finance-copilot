@@ -12,6 +12,7 @@
   "dependencies": {
     "@finance-copilot/contracts": "*",
     "@hono/node-server": "^1.19.0",
+    "@prisma/client": "^6.19.0",
     "hono": "^4.10.0",
     "zod": "^4.1.0"
   },

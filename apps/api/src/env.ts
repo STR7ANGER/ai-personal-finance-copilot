@@ -7,7 +7,7 @@ const environmentSchema = z.object({
   MONGODB_URI: z.string().min(1),
   REDIS_URL: z.string().url(),
   SESSION_SECRET: z.string().min(32),
-  PROFILE_ENCRYPTION_KEY: z.string().min(32),
+  PROFILE_ENCRYPTION_KEY: z.string().refine((value) => Buffer.from(value, "base64").length === 32, "Must be a base64-encoded 32-byte key"),
 });
 
 export type Environment = z.infer<typeof environmentSchema>;

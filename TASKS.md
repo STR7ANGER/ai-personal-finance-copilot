@@ -7,9 +7,9 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 - [x] 1. Design workspace, Docker services, environment validation, and CI; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [x] 2. Implement workspace, Docker services, environment validation, and CI; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [x] 3. Verify workspace, Docker services, environment validation, and CI with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 4. Design authentication, encrypted profiles, and audit logging; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 5. Implement authentication, encrypted profiles, and audit logging; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 6. Verify authentication, encrypted profiles, and audit logging with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 4. Design authentication, encrypted profiles, and audit logging; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 5. Implement authentication, encrypted profiles, and audit logging; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 6. Verify authentication, encrypted profiles, and audit logging with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 7. Design CSV upload, raw-document storage, and Go normalization worker; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 8. Implement CSV upload, raw-document storage, and Go normalization worker; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [ ] 9. Verify CSV upload, raw-document storage, and Go normalization worker with tests, failure cases, telemetry, documentation, and a reviewable demo.
