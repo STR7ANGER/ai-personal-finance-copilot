@@ -24,6 +24,36 @@ model User {
   profile            EncryptedProfile?
   sessions           Session[]
   auditEvents        AuditEvent[]        @relation("AuditActor")
+  statementImports   StatementImport[]
+}
+
+enum ImportStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model StatementImport {
+  id               String       @id @default(cuid())
+  userId           String
+  checksum         String
+  objectKey        String       @unique
+  originalFileName String
+  contentType      String
+  sizeBytes        Int
+  status           ImportStatus @default(QUEUED)
+  requestId        String
+  rowCount         Int?
+  failureReason    String?
+  createdAt        DateTime     @default(now())
+  startedAt        DateTime?
+  completedAt      DateTime?
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, checksum])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
 }
 
 enum UserStatus {

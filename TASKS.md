@@ -10,9 +10,9 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 - [x] 4. Design authentication, encrypted profiles, and audit logging; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [x] 5. Implement authentication, encrypted profiles, and audit logging; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [x] 6. Verify authentication, encrypted profiles, and audit logging with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 7. Design CSV upload, raw-document storage, and Go normalization worker; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 8. Implement CSV upload, raw-document storage, and Go normalization worker; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 9. Verify CSV upload, raw-document storage, and Go normalization worker with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 7. Design CSV upload, raw-document storage, and Go normalization worker; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 8. Implement CSV upload, raw-document storage, and Go normalization worker; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 9. Verify CSV upload, raw-document storage, and Go normalization worker with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 10. Design transaction schema, deduplication, categorization rules, and review UI; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 
 ## Day 2 — Core workflows and integrations (Tasks 11–20)
