@@ -6,6 +6,9 @@ import { AuthService } from "./modules/auth/service.js";
 import { PrismaImportRepository } from "./modules/imports/prisma-repository.js";
 import { RedisImportQueue, S3ObjectStorage } from "./modules/imports/adapters.js";
 import { ImportService } from "./modules/imports/service.js";
+import { createFinanceGraphQL } from "./modules/transactions/graphql.js";
+import { PrismaTransactionRepository } from "./modules/transactions/prisma-repository.js";
+import { TransactionService } from "./modules/transactions/service.js";
 
 const environment = parseEnvironment(process.env);
 const authService = new AuthService(new PrismaAuthRepository(), Buffer.from(environment.PROFILE_ENCRYPTION_KEY, "base64"));
@@ -14,5 +17,7 @@ const importService = new ImportService(
   new S3ObjectStorage({ endpoint: environment.S3_ENDPOINT, region: environment.S3_REGION, bucket: environment.S3_BUCKET, accessKeyId: environment.S3_ACCESS_KEY, secretAccessKey: environment.S3_SECRET_KEY }),
   new RedisImportQueue(environment.REDIS_URL),
 );
-serve({ fetch: createApp({ authService, importService }).fetch, port: environment.PORT });
+const transactionService = new TransactionService(new PrismaTransactionRepository());
+const graphQL = createFinanceGraphQL(authService, transactionService);
+serve({ fetch: createApp({ authService, importService, graphqlFetch: (request) => graphQL.fetch(request) }).fetch, port: environment.PORT });
 console.info(JSON.stringify({ level: "info", event: "server.started", port: environment.PORT }));

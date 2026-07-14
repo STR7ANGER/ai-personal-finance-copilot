@@ -14,17 +14,147 @@ model SystemCheck {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  email              String
-  emailNormalized    String              @unique
-  status             UserStatus          @default(ACTIVE)
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  passwordCredential PasswordCredential?
-  profile            EncryptedProfile?
-  sessions           Session[]
-  auditEvents        AuditEvent[]        @relation("AuditActor")
-  statementImports   StatementImport[]
+  id                  String               @id @default(cuid())
+  email               String
+  emailNormalized     String               @unique
+  status              UserStatus           @default(ACTIVE)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  passwordCredential  PasswordCredential?
+  profile             EncryptedProfile?
+  sessions            Session[]
+  auditEvents         AuditEvent[]         @relation("AuditActor")
+  statementImports    StatementImport[]
+  accounts            Account[]
+  categories          Category[]
+  categoryRules       CategoryRule[]
+  transactions        Transaction[]
+  duplicateCandidates DuplicateCandidate[]
+}
+
+model Account {
+  id           String        @id @default(cuid())
+  userId       String
+  name         String
+  currency     String        @db.VarChar(3)
+  timeZone     String        @default("UTC")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Category {
+  id           String         @id @default(cuid())
+  userId       String?
+  name         String
+  slug         String
+  color        String         @default("slate")
+  active       Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  user         User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  rules        CategoryRule[]
+
+  @@unique([userId, slug])
+  @@index([userId, active])
+}
+
+enum CategorySource {
+  USER
+  USER_RULE
+  MERCHANT_HISTORY
+  PLATFORM_RULE
+  AI
+  UNCATEGORIZED
+}
+
+enum ReviewStatus {
+  PENDING
+  REVIEWED
+  POSSIBLE_DUPLICATE
+}
+
+model Transaction {
+  id                    String           @id @default(cuid())
+  userId                String
+  accountId             String
+  importId              String?
+  sourceRowNumber       Int?
+  sourceTransactionId   String?
+  amountMinor           BigInt
+  currency              String           @db.VarChar(3)
+  postedDate            DateTime
+  description           String
+  normalizedDescription String
+  fingerprint           String
+  fingerprintVersion    Int              @default(1)
+  categoryId            String?
+  categorySource        CategorySource   @default(UNCATEGORIZED)
+  categoryConfidence    Float?
+  reviewStatus          ReviewStatus     @default(PENDING)
+  version               Int              @default(1)
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account               Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  import                StatementImport? @relation(fields: [importId], references: [id], onDelete: SetNull)
+  category              Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@unique([importId, sourceRowNumber])
+  @@unique([accountId, sourceTransactionId])
+  @@index([userId, postedDate, id])
+  @@index([userId, reviewStatus, postedDate])
+  @@index([accountId, fingerprint])
+}
+
+enum RuleMatchType {
+  DESCRIPTION_EXACT
+  DESCRIPTION_CONTAINS
+  DEBIT
+  CREDIT
+}
+
+model CategoryRule {
+  id         String        @id @default(cuid())
+  userId     String
+  categoryId String
+  matchType  RuleMatchType
+  pattern    String?
+  priority   Int           @default(100)
+  active     Boolean       @default(true)
+  version    Int           @default(1)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([userId, active, priority])
+}
+
+enum DuplicateResolution {
+  PENDING
+  KEEP_BOTH
+  MERGED
+  NOT_DUPLICATE
+}
+
+model DuplicateCandidate {
+  id          String              @id @default(cuid())
+  userId      String
+  leftId      String
+  rightId     String
+  resolution  DuplicateResolution @default(PENDING)
+  canonicalId String?
+  resolvedAt  DateTime?
+  createdAt   DateTime            @default(now())
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([leftId, rightId])
+  @@index([userId, resolution, createdAt])
 }
 
 enum ImportStatus {
@@ -35,21 +165,22 @@ enum ImportStatus {
 }
 
 model StatementImport {
-  id               String       @id @default(cuid())
+  id               String        @id @default(cuid())
   userId           String
   checksum         String
-  objectKey        String       @unique
+  objectKey        String        @unique
   originalFileName String
   contentType      String
   sizeBytes        Int
-  status           ImportStatus @default(QUEUED)
+  status           ImportStatus  @default(QUEUED)
   requestId        String
   rowCount         Int?
   failureReason    String?
-  createdAt        DateTime     @default(now())
+  createdAt        DateTime      @default(now())
   startedAt        DateTime?
   completedAt      DateTime?
-  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions     Transaction[]
 
   @@unique([userId, checksum])
   @@index([userId, createdAt])
