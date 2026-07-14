@@ -32,6 +32,9 @@ model User {
   duplicateCandidates DuplicateCandidate[]
   categorySuggestions CategorySuggestion[]
   categoryFeedback    CategoryFeedback[]
+  budgets             Budget[]
+  goals               FinancialGoal[]
+  subscriptions       Subscription[]
 }
 
 model Account {
@@ -50,21 +53,101 @@ model Account {
 }
 
 model Category {
-  id           String               @id @default(cuid())
-  userId       String?
-  name         String
-  slug         String
-  color        String               @default("slate")
-  active       Boolean              @default(true)
-  createdAt    DateTime             @default(now())
-  user         User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions Transaction[]
-  rules        CategoryRule[]
-  suggestions  CategorySuggestion[]
-  feedback     CategoryFeedback[]
+  id                String               @id @default(cuid())
+  userId            String?
+  name              String
+  slug              String
+  color             String               @default("slate")
+  active            Boolean              @default(true)
+  createdAt         DateTime             @default(now())
+  user              User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions      Transaction[]
+  rules             CategoryRule[]
+  suggestions       CategorySuggestion[]
+  feedback          CategoryFeedback[]
+  budgetAllocations BudgetAllocation[]
 
   @@unique([userId, slug])
   @@index([userId, active])
+}
+
+model Budget {
+  id              String             @id @default(cuid())
+  userId          String
+  name            String
+  month           DateTime           @db.Date
+  currency        String             @db.VarChar(3)
+  totalLimitMinor BigInt
+  version         Int                @default(1)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allocations     BudgetAllocation[]
+
+  @@unique([userId, month, currency])
+  @@index([userId, month])
+}
+
+model BudgetAllocation {
+  id         String   @id @default(cuid())
+  budgetId   String
+  categoryId String
+  limitMinor BigInt
+  budget     Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([budgetId, categoryId])
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+model FinancialGoal {
+  id           String     @id @default(cuid())
+  userId       String
+  name         String
+  targetMinor  BigInt
+  currentMinor BigInt     @default(0)
+  currency     String     @db.VarChar(3)
+  targetDate   DateTime?  @db.Date
+  status       GoalStatus @default(ACTIVE)
+  version      Int        @default(1)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, targetDate])
+}
+
+enum SubscriptionCadence {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+model Subscription {
+  id                 String              @id @default(cuid())
+  userId             String
+  merchant           String
+  normalizedMerchant String
+  amountMinor        BigInt
+  currency           String              @db.VarChar(3)
+  cadence            SubscriptionCadence
+  nextChargeDate     DateTime            @db.Date
+  active             Boolean             @default(true)
+  source             String              @default("USER")
+  version            Int                 @default(1)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, normalizedMerchant, amountMinor, currency, cadence])
+  @@index([userId, active, nextChargeDate])
 }
 
 enum CategorySource {

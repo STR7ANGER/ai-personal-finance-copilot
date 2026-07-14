@@ -12,6 +12,8 @@ import { TransactionService } from "./modules/transactions/service.js";
 import { GeminiCategoryClient } from "./modules/categorization/gemini.js";
 import { PrismaCategorizationRepository } from "./modules/categorization/prisma-repository.js";
 import { CategorizationService } from "./modules/categorization/service.js";
+import { PrismaPlanningRepository } from "./modules/planning/prisma-repository.js";
+import { PlanningService } from "./modules/planning/service.js";
 
 const environment = parseEnvironment(process.env);
 const authService = new AuthService(new PrismaAuthRepository(), Buffer.from(environment.PROFILE_ENCRYPTION_KEY, "base64"));
@@ -22,6 +24,7 @@ const importService = new ImportService(
 );
 const transactionService = new TransactionService(new PrismaTransactionRepository());
 const categorizationService = new CategorizationService(new PrismaCategorizationRepository(), new GeminiCategoryClient(environment.GEMINI_API_KEY, environment.GEMINI_MODEL));
-const graphQL = createFinanceGraphQL(authService, transactionService, categorizationService);
+const planningService = new PlanningService(new PrismaPlanningRepository());
+const graphQL = createFinanceGraphQL(authService, transactionService, categorizationService, planningService);
 serve({ fetch: createApp({ authService, importService, graphqlFetch: (request) => graphQL.fetch(request) }).fetch, port: environment.PORT });
 console.info(JSON.stringify({ level: "info", event: "server.started", port: environment.PORT }));

@@ -22,9 +22,9 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 - [x] 13. Design Gemini category suggestions with confidence, grounding, and feedback; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [x] 14. Implement Gemini category suggestions with confidence, grounding, and feedback; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [x] 15. Verify Gemini category suggestions with confidence, grounding, and feedback with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 16. Design budget, goal, and subscription modules with dashboard screens; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 17. Implement budget, goal, and subscription modules with dashboard screens; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 18. Verify budget, goal, and subscription modules with dashboard screens with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 16. Design budget, goal, and subscription modules with dashboard screens; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 17. Implement budget, goal, and subscription modules with dashboard screens; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 18. Verify budget, goal, and subscription modules with dashboard screens with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 19. Design forecasting pipeline, scenario assumptions, and charts; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 20. Implement forecasting pipeline, scenario assumptions, and charts; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 
