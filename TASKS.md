@@ -25,8 +25,8 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 - [x] 16. Design budget, goal, and subscription modules with dashboard screens; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [x] 17. Implement budget, goal, and subscription modules with dashboard screens; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [x] 18. Verify budget, goal, and subscription modules with dashboard screens with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 19. Design forecasting pipeline, scenario assumptions, and charts; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 20. Implement forecasting pipeline, scenario assumptions, and charts; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 19. Design forecasting pipeline, scenario assumptions, and charts; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 20. Implement forecasting pipeline, scenario assumptions, and charts; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 
 ## Day 3 — Advanced behavior and production hardening (Tasks 21–30)
 
