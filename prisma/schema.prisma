@@ -30,6 +30,8 @@ model User {
   categoryRules       CategoryRule[]
   transactions        Transaction[]
   duplicateCandidates DuplicateCandidate[]
+  categorySuggestions CategorySuggestion[]
+  categoryFeedback    CategoryFeedback[]
 }
 
 model Account {
@@ -48,16 +50,18 @@ model Account {
 }
 
 model Category {
-  id           String         @id @default(cuid())
+  id           String               @id @default(cuid())
   userId       String?
   name         String
   slug         String
-  color        String         @default("slate")
-  active       Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  user         User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  color        String               @default("slate")
+  active       Boolean              @default(true)
+  createdAt    DateTime             @default(now())
+  user         User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
   rules        CategoryRule[]
+  suggestions  CategorySuggestion[]
+  feedback     CategoryFeedback[]
 
   @@unique([userId, slug])
   @@index([userId, active])
@@ -79,36 +83,81 @@ enum ReviewStatus {
 }
 
 model Transaction {
-  id                    String           @id @default(cuid())
+  id                    String               @id @default(cuid())
   userId                String
   accountId             String
   importId              String?
   sourceRowNumber       Int?
   sourceTransactionId   String?
   amountMinor           BigInt
-  currency              String           @db.VarChar(3)
+  currency              String               @db.VarChar(3)
   postedDate            DateTime
   description           String
   normalizedDescription String
   fingerprint           String
-  fingerprintVersion    Int              @default(1)
+  fingerprintVersion    Int                  @default(1)
   categoryId            String?
-  categorySource        CategorySource   @default(UNCATEGORIZED)
+  categorySource        CategorySource       @default(UNCATEGORIZED)
   categoryConfidence    Float?
-  reviewStatus          ReviewStatus     @default(PENDING)
-  version               Int              @default(1)
-  createdAt             DateTime         @default(now())
-  updatedAt             DateTime         @updatedAt
-  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account               Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  import                StatementImport? @relation(fields: [importId], references: [id], onDelete: SetNull)
-  category              Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  reviewStatus          ReviewStatus         @default(PENDING)
+  version               Int                  @default(1)
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  user                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account               Account              @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  import                StatementImport?     @relation(fields: [importId], references: [id], onDelete: SetNull)
+  category              Category?            @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  suggestions           CategorySuggestion[]
 
   @@unique([importId, sourceRowNumber])
   @@unique([accountId, sourceTransactionId])
   @@index([userId, postedDate, id])
   @@index([userId, reviewStatus, postedDate])
   @@index([accountId, fingerprint])
+}
+
+enum SuggestionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  SUPERSEDED
+}
+
+model CategorySuggestion {
+  id                  String             @id @default(cuid())
+  userId              String
+  transactionId       String
+  suggestedCategoryId String?
+  confidence          Float
+  explanation         String
+  model               String
+  promptVersion       String
+  groundedInputHash   String
+  status              SuggestionStatus   @default(PENDING)
+  createdAt           DateTime           @default(now())
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction         Transaction        @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  suggestedCategory   Category?          @relation(fields: [suggestedCategoryId], references: [id], onDelete: SetNull)
+  feedback            CategoryFeedback[]
+
+  @@index([userId, transactionId, createdAt])
+  @@index([status, createdAt])
+}
+
+model CategoryFeedback {
+  id           String             @id @default(cuid())
+  userId       String
+  suggestionId String
+  accepted     Boolean
+  categoryId   String?
+  reason       String?
+  createdAt    DateTime           @default(now())
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  suggestion   CategorySuggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  category     Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, suggestionId])
+  @@index([userId, createdAt])
 }
 
 enum RuleMatchType {
