@@ -19,6 +19,10 @@ import { ForecastService } from "./modules/forecasting/service.js";
 import { GeminiFinanceAnswerClient } from "./modules/qa/gemini.js";
 import { PrismaFinanceQaRepository } from "./modules/qa/prisma-repository.js";
 import { FinanceQaService } from "./modules/qa/service.js";
+import { PrismaOperationsRepository } from "./modules/operations/prisma-repository.js";
+import { OperationsService } from "./modules/operations/service.js";
+import { MetricsRegistry } from "./infra/metrics.js";
+import { FixedWindowRateLimiter, RedisRateLimitStore } from "./infra/rate-limit.js";
 
 const environment = parseEnvironment(process.env);
 const authService = new AuthService(new PrismaAuthRepository(), Buffer.from(environment.PROFILE_ENCRYPTION_KEY, "base64"));
@@ -33,5 +37,6 @@ const planningService = new PlanningService(new PrismaPlanningRepository());
 const forecastService = new ForecastService(new PrismaForecastRepository(), () => new Date(), { record: (event) => console.info(JSON.stringify({ level: "info", ...event })) });
 const financeQaService = new FinanceQaService(new PrismaFinanceQaRepository(), new GeminiFinanceAnswerClient(environment.GEMINI_API_KEY, environment.GEMINI_MODEL));
 const graphQL = createFinanceGraphQL(authService, transactionService, categorizationService, planningService, forecastService, financeQaService);
-serve({ fetch: createApp({ authService, importService, graphqlFetch: (request) => graphQL.fetch(request) }).fetch, port: environment.PORT });
+const operationsService = new OperationsService(new PrismaOperationsRepository());
+serve({ fetch: createApp({ authService, importService, operationsService, graphqlFetch: (request) => graphQL.fetch(request), metrics: new MetricsRegistry(), rateLimiter: new FixedWindowRateLimiter(new RedisRateLimitStore(environment.REDIS_URL)), operatorMetricsToken: environment.OPERATOR_METRICS_TOKEN }).fetch, port: environment.PORT });
 console.info(JSON.stringify({ level: "info", event: "server.started", port: environment.PORT }));

@@ -1,0 +1,7 @@
+export class MetricsRegistry {
+  private readonly requests = new Map<string, number>(); private readonly durations = new Map<string, number>();
+  record(method: string, route: string, status: number, durationMs: number) { const key = `${method}|${route}|${Math.floor(status / 100)}xx`; this.requests.set(key, (this.requests.get(key) ?? 0) + 1); this.durations.set(key, (this.durations.get(key) ?? 0) + durationMs); }
+  render() { const lines = ["# TYPE finance_http_requests_total counter", ...[...this.requests].map(([key, value]) => { const [method, route, status] = key.split("|"); return `finance_http_requests_total{method="${method}",route="${route}",status_class="${status}"} ${value}`; }), "# TYPE finance_http_duration_ms_total counter", ...[...this.durations].map(([key, value]) => { const [method, route, status] = key.split("|"); return `finance_http_duration_ms_total{method="${method}",route="${route}",status_class="${status}"} ${Math.round(value)}`; })]; return lines.join("\n") + "\n"; }
+}
+
+export function routeLabel(path: string) { if (path === "/health") return "/health"; if (path === "/graphql") return "/graphql"; if (path.startsWith("/v1/auth/")) return "/v1/auth/*"; if (path.startsWith("/v1/imports/")) return "/v1/imports/*"; if (path.startsWith("/v1/operations/")) return "/v1/operations/*"; if (path === "/internal/metrics") return "/internal/metrics"; return "/other"; }
