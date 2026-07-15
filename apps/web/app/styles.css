@@ -47,3 +47,13 @@ article p { color: #9eb1a6; line-height: 1.55; }
 .table-scroll { overflow-x: auto; margin-top: 12px; }
 .forecast-chart table { width: 100%; border-collapse: collapse; font-size: .85rem; }
 .forecast-chart th, .forecast-chart td { padding: 9px; border-bottom: 1px solid #294638; text-align: left; white-space: nowrap; }
+.ask-workspace { display: grid; gap: 18px; }
+.ask-form, .answer-card { padding: 24px; border: 1px solid #294638; border-radius: 18px; background: #0a1710; }
+.ask-form { display: grid; gap: 12px; }
+.ask-form label { color: #a9bbb0; }
+.ask-form textarea { width: 100%; min-height: 130px; resize: vertical; padding: 16px; border: 1px solid #365344; border-radius: 12px; background: #07110d; color: #f2f8f4; font: inherit; line-height: 1.5; }
+.ask-form > div { display: flex; justify-content: space-between; align-items: center; color: #91a69a; }
+.ask-form button { padding: 12px 18px; border: 0; border-radius: 10px; color: #06110b; background: #69e5a3; font-weight: 800; }
+.answer-card h2 { max-width: 850px; font-size: clamp(1.5rem, 4vw, 2.5rem); line-height: 1.35; }
+.answer-card ol { display: grid; gap: 10px; padding-left: 22px; }
+.answer-card li span { display: block; color: #91a69a; margin-top: 3px; }

@@ -1,0 +1,12 @@
+"use client";
+
+import { useState } from "react";
+
+type Answer = { answer: string; periodStart: string; currency: string; citations: Array<{ id: string; label: string; sourceType: string; valueMinor: string | null }> };
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+
+export function AskClient() {
+  const [question, setQuestion] = useState("Why did I spend more this month?"); const [answer, setAnswer] = useState<Answer | null>(null); const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+  const ask = async () => { setState("loading"); const month = new Date().toISOString().slice(0, 7); const query = `mutation Ask($question:String!,$month:String!){askFinance(question:$question,month:$month,currency:"USD"){answer periodStart currency citations{id label sourceType valueMinor}}}`; try { const response = await fetch(`${apiUrl}/graphql`, { method: "POST", credentials: "include", headers: { "content-type": "application/json" }, body: JSON.stringify({ query, variables: { question, month } }) }); const payload = await response.json(); if (!payload.data) throw new Error("answer unavailable"); setAnswer(payload.data.askFinance); setState("idle"); } catch { setState("error"); } };
+  return <div className="ask-workspace"><form className="ask-form" onSubmit={(event) => { event.preventDefault(); void ask(); }}><label htmlFor="finance-question">Ask about reviewed transactions, budgets, or subscriptions</label><textarea id="finance-question" minLength={3} maxLength={500} value={question} onChange={(event) => setQuestion(event.target.value)} /><div><span>{question.length}/500</span><button type="submit" disabled={state === "loading"}>{state === "loading" ? "Grounding answer…" : "Ask Finance Copilot"}</button></div></form>{state === "error" && <div role="alert" className="review-state"><h2>Answer unavailable.</h2><p>Configure Gemini, sign in, and make sure reviewed financial facts exist for this month.</p></div>}{answer && <article className="answer-card"><p className="eyebrow">GROUNDED ANSWER</p><h2>{answer.answer}</h2><p className="forecast-note">Period: {answer.periodStart.slice(0, 7)} · {answer.currency}. This is an explanation of your recorded data, not financial advice.</p><h3>Sources</h3><ol>{answer.citations.map((citation) => <li key={citation.id}><strong>{citation.label}</strong><span>{citation.sourceType.toLowerCase().replaceAll("_", " ")}{citation.valueMinor ? ` · ${citation.valueMinor} minor units` : ""}</span></li>)}</ol></article>}</div>;
+}

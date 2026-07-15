@@ -35,6 +35,37 @@ model User {
   budgets             Budget[]
   goals               FinancialGoal[]
   subscriptions       Subscription[]
+  financeAnswers      FinanceAnswer[]
+}
+
+model FinanceAnswer {
+  id            String            @id @default(cuid())
+  userId        String
+  question      String
+  answer        String
+  currency      String            @db.VarChar(3)
+  periodStart   DateTime          @db.Date
+  model         String
+  promptVersion String
+  factsHash     String
+  createdAt     DateTime          @default(now())
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  citations     FinanceCitation[]
+
+  @@index([userId, createdAt])
+}
+
+model FinanceCitation {
+  id         String        @id @default(cuid())
+  answerId   String
+  factId     String
+  label      String
+  sourceType String
+  sourceId   String?
+  valueMinor BigInt?
+  answer     FinanceAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+
+  @@unique([answerId, factId])
 }
 
 model Account {
