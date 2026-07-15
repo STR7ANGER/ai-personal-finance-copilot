@@ -1,0 +1,5 @@
+Date,Description,Amount,Currency,Account
+2026-07-01,Salary,3500.00,USD,Checking
+2026-07-02,Grocery Market,-84.25,USD,Checking
+2026-07-03,Music Subscription,-9.99,USD,Credit Card
+2026-07-03,=HYPERLINK(""https://example.invalid""),-1.00,USD,Checking

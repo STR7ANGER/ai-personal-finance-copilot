@@ -1,0 +1,21 @@
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY apps/api/package.json apps/api/package.json
+COPY apps/web/package.json apps/web/package.json
+COPY packages/contracts/package.json packages/contracts/package.json
+RUN npm ci
+COPY . .
+RUN npx prisma generate && npm run build --workspace @finance-copilot/api
+
+FROM node:24-alpine AS runtime
+ENV NODE_ENV=production
+WORKDIR /app
+RUN addgroup -S app && adduser -S app -G app
+COPY --from=build --chown=app:app /app/node_modules ./node_modules
+COPY --from=build --chown=app:app /app/apps/api/dist ./apps/api/dist
+COPY --from=build --chown=app:app /app/prisma ./prisma
+COPY --from=build --chown=app:app /app/package.json ./package.json
+USER app
+EXPOSE 3001
+CMD ["node", "apps/api/dist/server.js"]

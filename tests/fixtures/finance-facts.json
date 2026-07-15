@@ -1,0 +1,8 @@
+{
+  "month": "2026-07",
+  "currency": "USD",
+  "reviewedSpendMinor": "9424",
+  "categories": [{ "name": "Groceries", "amountMinor": "8425" }],
+  "budgetLimitMinor": "150000",
+  "confirmedSubscriptions": [{ "merchant": "Music Subscription", "amountMinor": "999" }]
+}
