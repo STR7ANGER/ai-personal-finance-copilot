@@ -27,7 +27,7 @@ const importService = new ImportService(
 const transactionService = new TransactionService(new PrismaTransactionRepository());
 const categorizationService = new CategorizationService(new PrismaCategorizationRepository(), new GeminiCategoryClient(environment.GEMINI_API_KEY, environment.GEMINI_MODEL));
 const planningService = new PlanningService(new PrismaPlanningRepository());
-const forecastService = new ForecastService(new PrismaForecastRepository());
+const forecastService = new ForecastService(new PrismaForecastRepository(), () => new Date(), { record: (event) => console.info(JSON.stringify({ level: "info", ...event })) });
 const graphQL = createFinanceGraphQL(authService, transactionService, categorizationService, planningService, forecastService);
 serve({ fetch: createApp({ authService, importService, graphqlFetch: (request) => graphQL.fetch(request) }).fetch, port: environment.PORT });
 console.info(JSON.stringify({ level: "info", event: "server.started", port: environment.PORT }));

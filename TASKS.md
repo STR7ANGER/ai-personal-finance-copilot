@@ -30,7 +30,7 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 
 ## Day 3 — Advanced behavior and production hardening (Tasks 21–30)
 
-- [ ] 21. Verify forecasting pipeline, scenario assumptions, and charts with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 21. Verify forecasting pipeline, scenario assumptions, and charts with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 22. Design grounded finance Q&A with GraphQL dashboard queries; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 23. Implement grounded finance Q&A with GraphQL dashboard queries; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [ ] 24. Verify grounded finance Q&A with GraphQL dashboard queries with tests, failure cases, telemetry, documentation, and a reviewable demo.

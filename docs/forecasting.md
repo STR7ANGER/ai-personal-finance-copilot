@@ -30,3 +30,7 @@ Each UTC day returns expected, lower, and upper balance; expected inflow/outflow
 ## Smallest vertical slice
 
 Expose `cashFlowForecast` through authenticated GraphQL and render a responsive expected-balance line with an uncertainty band and assumptions. Task 21 will add golden fixtures, boundary/failure tests, historical backtesting, chart accessibility review, and live-data verification.
+
+## Verification record
+
+Task 21 adds deterministic tests for reviewed daily averages, recurring charges, scenario events, uncertainty arithmetic, sparse history, money/horizon/date boundaries, and telemetry redaction. The production chart includes an equivalent data table for non-visual inspection. The live demo query returns the requested number of daily points and exposes model/history metadata. Before production decision-making, backtest rolling 30/60/90-day windows against at least six months of user-confirmed data and publish median absolute error by balance range and history-density cohort.

@@ -43,3 +43,7 @@ article p { color: #9eb1a6; line-height: 1.55; }
 .forecast-summary { display: flex; flex-wrap: wrap; gap: 30px; }
 .forecast-summary span { display: grid; gap: 4px; } .forecast-summary small, .forecast-note { color: #91a69a; }
 .forecast-error { color: #ffaaa0; }
+.forecast-chart details { margin-top: 20px; color: #a9bbb0; }
+.table-scroll { overflow-x: auto; margin-top: 12px; }
+.forecast-chart table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.forecast-chart th, .forecast-chart td { padding: 9px; border-bottom: 1px solid #294638; text-align: left; white-space: nowrap; }
